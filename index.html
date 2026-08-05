@@ -411,12 +411,12 @@
   <!-- ==================== AD DISPLAY MODAL ==================== -->
   <div id="adModal" class="ad-modal">
     <div class="ad-modal-content">
-      <div class="ad-step-indicator" id="ad-step-indicator">বিজ্ঞাপন ১ / ৫ (লিংক অ্যাড)</div>
-      <div class="ad-timer" id="ad-timer">লিংকে প্রবেশ করুন</div>
+      <div class="ad-step-indicator" id="ad-step-indicator">বিজ্ঞাপন ১ / ৫</div>
+      <div class="ad-timer" id="ad-timer">বিজ্ঞাপনটি চালু করতে নিচের বাটনে ক্লিক করুন</div>
       
       <div id="ad-body"></div>
 
-      <button class="btn-next-ad" id="btn-next-ad" onclick="nextAd()">পরবর্তী অ্যাড →</button>
+      <button class="btn-next-ad" id="btn-next-ad">পরবর্তী অ্যাড →</button>
     </div>
   </div>
 
@@ -557,112 +557,101 @@
       window.scrollTo(0, 0);
     }
 
-    const adList = [
-      { title: '১ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505836' },
-      { title: '২য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505835' },
-      { title: '৩য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505833' },
-      { title: '৪র্থ বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/5529738' },
-      { title: '৫ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505832' }
-    ];
-
-    let currentAdIndex = 0;
+    // ==================== MONETAG IN-APP 5-ADS SEQUENCE LOGIC ====================
+    let currentAdStep = 0;
+    const totalAdsPerTask = 5; // ৫টি ইন-অ্যাপ অ্যাড দেখতে হবে
     let timerInterval = null;
-    let linkClicked = false;
 
     function startAdSequence() {
-      if((userData.watchedToday || 0) >= taskLimit) {
+      if ((userData.watchedToday || 0) >= taskLimit) {
         alert('আজকের দৈনিক ৪০ টি কাজের লিমিট শেষ!');
         return;
       }
-      currentAdIndex = 0;
+
+      currentAdStep = 0;
       document.getElementById('adModal').style.display = 'flex';
-      loadAd(currentAdIndex);
+      showNextInAppAdStep();
     }
 
-    function loadAd(index) {
-      clearInterval(timerInterval);
-      const ad = adList[index];
+    function showNextInAppAdStep() {
+      const adBody = document.getElementById('ad-body');
+      const nextBtn = document.getElementById('btn-next-ad');
+      const timerElem = document.getElementById('ad-timer');
+      const stepIndicator = document.getElementById('ad-step-indicator');
+
+      nextBtn.style.display = 'none';
+      stepIndicator.innerText = `বিজ্ঞাপন ${currentAdStep + 1} / ${totalAdsPerTask}`;
+      timerElem.innerText = "বিজ্ঞাপনটি চালু করতে নিচের বাটনে ক্লিক করুন";
+
+      adBody.innerHTML = `
+        <button class="btn-link-action" onclick="playMonetagAd()">🎬 বিজ্ঞাপন #${currentAdStep + 1} দেখুন</button>
+      `;
+    }
+
+    function playMonetagAd() {
+      if (typeof show_11506670 === 'function') {
+        show_11506670()
+          .then(() => {
+            // ১টি ইন-অ্যাপ অ্যাড দেখা সফল হলে
+            handleAdSuccess();
+          })
+          .catch((e) => {
+            console.error("Ad Error:", e);
+            alert("বিজ্ঞাপন লোড হতে সমস্যা হয়েছে। আপনার AdBlocker বন্ধ আছে কিনা নিশ্চিত করুন।");
+          });
+      } else {
+        alert("বিজ্ঞাপন নেটওয়ার্কের সাথে কানেক্ট করা যাচ্ছে না। AdBlocker বন্ধ করুন।");
+      }
+    }
+
+    function handleAdSuccess() {
       const adBody = document.getElementById('ad-body');
       const nextBtn = document.getElementById('btn-next-ad');
       const timerElem = document.getElementById('ad-timer');
       
-      nextBtn.style.display = 'none';
-      document.getElementById('ad-step-indicator').innerText = `বিজ্ঞাপন ${index + 1} / ৫ (লিংক অ্যাড)`;
+      adBody.innerHTML = '<p style="color:#4ade80; font-weight:bold; font-size:15px; margin-bottom:10px;">✓ অ্যাড দেখা সম্পন্ন হয়েছে!</p>';
       
-      linkClicked = false;
-      timerElem.innerText = "লিংকে প্রবেশ করুন বাটনে ক্লিক করুন";
-
-      adBody.innerHTML = `
-        <button class="btn-link-action" onclick="handleLinkClick('${ad.url}')">🔗 লিংকে প্রবেশ করুন</button>
-      `;
-    }
-
-    // সংশোধনকৃত handleLinkClick ফাংশন
-    function handleLinkClick(url) {
-      if (typeof show_11506670 === 'function') {
-        show_11506670().then(() => {
-          if (!linkClicked) {
-            linkClicked = true;
-            startTimer(10);
-          }
-        }).catch((e) => {
-          console.error("Ad Error:", e);
-          window.open(url, '_blank');
-          if (!linkClicked) {
-            linkClicked = true;
-            startTimer(10);
-          }
-        });
-      } else {
-        window.open(url, '_blank');
-        if (!linkClicked) {
-          linkClicked = true;
-          startTimer(10);
-        }
-      }
-    }
-
-    function startTimer(seconds) {
-      let timeLeft = seconds;
-      const timerElem = document.getElementById('ad-timer');
-      const nextBtn = document.getElementById('btn-next-ad');
-
+      let timeLeft = 5; // প্রতি অ্যাডের পর ৫ সেকেন্ড অপেক্ষা
       timerElem.innerText = `অপেক্ষা করুন: ${timeLeft} সেকেন্ড`;
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
-        if(timeLeft > 0) {
+        if (timeLeft > 0) {
           timerElem.innerText = `অপেক্ষা করুন: ${timeLeft} সেকেন্ড`;
         } else {
           clearInterval(timerInterval);
-          timerElem.innerText = "সময় শেষ! পরবর্তী বাটনে ক্লিক করুন।";
-          nextBtn.style.display = 'block';
-          if(currentAdIndex === adList.length - 1) {
-            nextBtn.innerText = "পুরস্কার সংগ্রহ করুন 🎁";
+          currentAdStep++; // ১টি কাউন্ট বাড়লো
+
+          if (currentAdStep < totalAdsPerTask) {
+            timerElem.innerText = `বিজ্ঞাপন ${currentAdStep}/${totalAdsPerTask} সম্পন্ন!`;
+            nextBtn.innerText = `পরবর্তী বিজ্ঞাপন (${currentAdStep + 1}/${totalAdsPerTask}) ►`;
+            nextBtn.onclick = showNextInAppAdStep;
+            nextBtn.style.display = 'block';
           } else {
-            nextBtn.innerText = "পরবর্তী অ্যাড →";
+            // ৫টি অ্যাড সম্পূর্ণ সম্পন্ন হলে
+            timerElem.innerText = "🎉 অভিনন্দন! ৫টি বিজ্ঞাপন সফলভাবে দেখা হয়েছে।";
+            nextBtn.innerText = "পুরস্কার সংগ্রহ করুন (৳ ৫.০০) 🎁";
+            nextBtn.onclick = claimFinalReward;
+            nextBtn.style.display = 'block';
           }
         }
       }, 1000);
     }
 
-    function nextAd() {
-      if(currentAdIndex < adList.length - 1) {
-        currentAdIndex++;
-        loadAd(currentAdIndex);
-      } else {
-        document.getElementById('adModal').style.display = 'none';
-        
-        userData.watchedToday = (userData.watchedToday || 0) + 1;
-        userData.balance = (userData.balance || 0) + rewardPerTask;
-        userData.earned = (userData.earned || 0) + rewardPerTask;
-        
-        updateUIAndDatabase();
-        alert('অভিনন্দন! আপনি সফলভাবে ৫টি লিংক বিজ্ঞাপন দেখেছেন। ৳ ৫.০০ যোগ করা হয়েছে।');
-      }
+    function claimFinalReward() {
+      document.getElementById('adModal').style.display = 'none';
+
+      // ব্যালেন্স ও টাস্ক কাউন্ট আপডেট
+      userData.watchedToday = (userData.watchedToday || 0) + 1;
+      userData.balance = (userData.balance || 0) + rewardPerTask;
+      userData.earned = (userData.earned || 0) + rewardPerTask;
+
+      updateUIAndDatabase();
+      alert('অভিনন্দন! আপনি সফলভাবে ৫টি বিজ্ঞাপন দেখে ৳ ৫.০০ অর্জন করেছেন।');
     }
 
+    // ==================== OTHER UTILITIES ====================
     function processWithdraw() {
       const method = document.getElementById('withdraw-method').value;
       const account = document.getElementById('withdraw-account').value;
@@ -702,7 +691,11 @@
     function shareTelegram() {
       const link = document.getElementById("ref-link").value;
       const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("প্রতি রিয়েল রেফারেই ৫০ টাকা বোনাস পেতে এখনই জয়েন করুন!")}`;
-      window.open(shareUrl, '_blank');
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+        window.Telegram.WebApp.openTelegramLink(shareUrl);
+      } else {
+        window.open(shareUrl, '_blank');
+      }
     }
   </script>
 </body>
