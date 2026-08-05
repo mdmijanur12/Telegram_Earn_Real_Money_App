@@ -198,6 +198,19 @@
     .empty-state { text-align: center; padding: 30px 10px; color: #64748b; font-size: 13px; }
     .empty-icon { font-size: 36px; margin-bottom: 8px; display: block; }
 
+    /* History Custom List Items */
+    .history-item { display: flex; justify-content: space-between; align-items: center; background: #080d1a; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-align: left; }
+    .history-left { display: flex; flex-direction: column; gap: 2px; }
+    .history-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .history-sub { font-size: 11px; color: #64748b; }
+    .history-right { text-align: right; }
+    .history-amount { font-size: 14px; font-weight: 800; color: #10b981; }
+    
+    .status-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; display: inline-block; text-transform: uppercase; margin-top: 3px; }
+    .status-pending { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .status-paid, .status-valid { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-rejected, .status-fake { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
     /* Support Page Styles */
     .video-card { background: linear-gradient(180deg, #151433, #0d131f); border-radius: 18px; padding: 30px 15px; text-align: center; border: 1px solid #1a2333; margin-bottom: 15px; }
     .play-btn { width: 55px; height: 55px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 20px; color: #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
@@ -487,9 +500,11 @@
     </div>
 
     <div class="section-title">👥 Your Referrals</div>
-    <div class="card empty-state" id="ref-empty-state">
-      <span class="empty-icon" style="color:#3b82f6;">👤</span>
-      No referrals yet
+    <div id="ref-list-container">
+      <div class="card empty-state" id="ref-empty-state">
+        <span class="empty-icon" style="color:#3b82f6;">👤</span>
+        No referrals yet
+      </div>
     </div>
   </div>
 
@@ -533,9 +548,11 @@
     </div>
 
     <div class="section-title">📋 Withdrawal History</div>
-    <div class="card empty-state">
-      <span class="empty-icon">📫</span>
-      No withdrawals yet
+    <div id="withdraw-list-container">
+      <div class="card empty-state" id="withdraw-empty-state">
+        <span class="empty-icon">📫</span>
+        No withdrawals yet
+      </div>
     </div>
   </div>
 
@@ -649,7 +666,7 @@
       userRef.get().then((doc) => {
         if (doc.exists) {
           userData = doc.data();
-          userData.name = currentUserName; // নাম তাজা রাখা
+          userData.name = currentUserName;
           userData.userId = currentUserId;
         } else {
           userData = {
@@ -665,6 +682,8 @@
           userRef.set(userData);
         }
         updateUI();
+        loadWithdrawalHistory();
+        loadReferralHistory();
       }).catch((error) => {
         console.error("Firebase Connection Error: ", error);
       });
@@ -697,6 +716,101 @@
       document.getElementById('ref-total-count').innerText = refs;
       document.getElementById('ref-active-count').innerText = refs;
       document.getElementById('ref-earned-amount').innerText = (refs * refBonus).toFixed(2);
+    }
+
+    // ==================== REALTIME WITHDRAWAL HISTORY ====================
+    function loadWithdrawalHistory() {
+      db.collection("withdrawals")
+        .where("userId", "==", currentUserId)
+        .onSnapshot((snapshot) => {
+          const container = document.getElementById("withdraw-list-container");
+          if (snapshot.empty) {
+            container.innerHTML = `
+              <div class="card empty-state">
+                <span class="empty-icon">📫</span>
+                No withdrawals yet
+              </div>`;
+            return;
+          }
+
+          let html = "";
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const status = (data.status || "pending").toLowerCase();
+            let statusClass = "status-pending";
+            let statusText = "Pending";
+
+            if (status === "paid" || status === "approved" || status === "completed") {
+              statusClass = "status-paid";
+              statusText = "Paid";
+            } else if (status === "rejected" || status === "cancelled") {
+              statusClass = "status-rejected";
+              statusText = "Rejected";
+            }
+
+            html += `
+              <div class="history-item">
+                <div class="history-left">
+                  <div class="history-title">${(data.method || 'Bkash').toUpperCase()} - ${data.accountNumber || ''}</div>
+                  <div class="history-sub">Request Time: ${data.requestedAt ? new Date(data.requestedAt.toDate()).toLocaleDateString('bn-BD') : 'Just now'}</div>
+                </div>
+                <div class="history-right">
+                  <div class="history-amount">৳ ${(data.amount || 0).toFixed(2)}</div>
+                  <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        });
+    }
+
+    // ==================== REALTIME REFERRAL HISTORY ====================
+    function loadReferralHistory() {
+      db.collection("users")
+        .where("referredBy", "==", currentUserId)
+        .onSnapshot((snapshot) => {
+          const container = document.getElementById("ref-list-container");
+          if (snapshot.empty) {
+            container.innerHTML = `
+              <div class="card empty-state">
+                <span class="empty-icon" style="color:#3b82f6;">👤</span>
+                No referrals yet
+              </div>`;
+            return;
+          }
+
+          let html = "";
+          let validRefCount = 0;
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const isFake = data.status === "fake" || data.isFake === true;
+            
+            let badgeClass = isFake ? "status-fake" : "status-valid";
+            let badgeText = isFake ? "Rejected / Fake" : "Valid";
+            let bonusAmount = isFake ? "৳ 0.00" : "+৳ 50.00";
+
+            if (!isFake) validRefCount++;
+
+            html += `
+              <div class="history-item">
+                <div class="history-left">
+                  <div class="history-title">${data.name || 'User'}</div>
+                  <div class="history-sub">ID: ${data.userId || 'N/A'}</div>
+                </div>
+                <div class="history-right">
+                  <div class="history-amount" style="color:${isFake ? '#ef4444' : '#10b981'};">${bonusAmount}</div>
+                  <span class="status-badge ${badgeClass}">${badgeText}</span>
+                </div>
+              </div>
+            `;
+          });
+
+          userData.referrals = validRefCount;
+          updateUI();
+          container.innerHTML = html;
+        });
     }
 
     window.onload = function() {
@@ -833,7 +947,7 @@
       // ১. ইউজারের ব্যালেন্স ও উইথড্র ফায়ারবেসে আপডেট
       updateUIAndDatabase();
 
-      // ২. ফায়ারবেসে উইথড্র রিকোয়েস্টটি আলাদা কালেকশনে সংরক্ষণ
+      // ২. ফায়ারবেসে উইথড্র রিকোয়েস্টটি আলাদা কালেকশনে "pending" হিসেবে সেভ করা
       db.collection("withdrawals").add({
         userId: currentUserId,
         userName: currentUserName,
@@ -844,6 +958,8 @@
         requestedAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         alert('উইথড্র রিকোয়েস্ট সফলভাবে জমা নেওয়া হয়েছে!');
+        document.getElementById('withdraw-account').value = '';
+        document.getElementById('withdraw-amount').value = '';
       }).catch((err) => {
         console.error("Withdraw Error: ", err);
         alert('উইথড্র রিকোয়েস্ট জমা দেওয়া হয়েছে!');
