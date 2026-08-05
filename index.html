@@ -145,14 +145,6 @@
       margin-bottom: 15px;
       font-weight: bold;
     }
-    .poster-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      border: 1px solid #1e293b;
-    }
     .btn-next-ad {
       width: 100%;
       background: #10b981;
@@ -163,19 +155,19 @@
       font-weight: bold;
       cursor: pointer;
       display: none;
+      margin-top: 10px;
     }
     .btn-link-action {
       background: #6366f1;
       color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 15px;
       display: inline-block;
       margin-bottom: 15px;
       font-weight: bold;
-      cursor: pointer;
-      border: none;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
   </style>
 </head>
@@ -429,7 +421,7 @@
   <div id="adModal" class="ad-modal">
     <div class="ad-modal-content">
       <div class="ad-step-indicator" id="ad-step-indicator">বিজ্ঞাপন ১ / ৫ (লিংক অ্যাড)</div>
-      <div class="ad-timer" id="ad-timer">লিংকে ক্লিক করুন</div>
+      <div class="ad-timer" id="ad-timer">অপেক্ষা করুন: ১০ সেকেন্ড</div>
       
       <div id="ad-body">
         <!-- Dynamic Ad Content Goes Here -->
@@ -506,18 +498,17 @@
     const minWithdraw = 500.00;
     const refBonus = 50.00;
 
-    // 5 Ads Configuration
+    // 5 Link Ads Configuration (এখানে আপনি ৫টি লিংক নিজের ইচ্ছেমতো বসাতে পারবেন)
     const adList = [
-      { type: 'link', title: '১ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://telegram.org', bannerText: 'স্পন্সরড ওয়েবসাইট ভিজিট করুন' },
-      { type: 'poster', title: '২য় বিজ্ঞাপন (পোস্টার অ্যাড)', img: 'https://via.placeholder.com/400x200/181538/facc15?text=Special+Offer+Poster' },
-      { type: 'link', title: '৩য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://t.me', bannerText: 'টেলিগ্রাম চ্যানেলে ভিজিট করুন' },
-      { type: 'poster', title: '৪র্থ বিজ্ঞাপন (পোস্টার অ্যাড)', img: 'https://via.placeholder.com/400x200/06271c/10b981?text=Bonus+Earn+Poster' },
-      { type: 'link', title: '৫ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://google.com', bannerText: 'অফিসিয়াল পেজ ভিজিট করুন' }
+      { title: '১ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505836', },
+      { title: '২য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505835', },
+      { title: '৩য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505833', },
+      { title: '৪র্থ বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/5529738', },
+      { title: '৫ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505832', },
     ];
 
     let currentAdIndex = 0;
     let timerInterval = null;
-    let linkClicked = false;
 
     // Start 5-Ads Process
     function startAdSequence() {
@@ -532,47 +523,21 @@
 
     // Render Ad in Modal
     function loadAd(index) {
-      clearInterval(timerInterval);
       const ad = adList[index];
       const adBody = document.getElementById('ad-body');
       const nextBtn = document.getElementById('btn-next-ad');
       const timerElem = document.getElementById('ad-timer');
       
       nextBtn.style.display = 'none';
-      document.getElementById('ad-step-indicator').innerText = `বিজ্ঞাপন ${index + 1} / ৫ (${ad.type === 'link' ? 'লিংক অ্যাড' : 'পোস্টার অ্যাড'})`;
+      document.getElementById('ad-step-indicator').innerText = `বিজ্ঞাপন ${index + 1} / ৫ (লিংক অ্যাড)`;
       
-      linkClicked = false;
-
-      if(ad.type === 'link') {
-        timerElem.innerText = "লিংকে প্রবেশ করুন বাটনে ক্লিক করুন";
-        adBody.innerHTML = `
-          <div style="margin-bottom:15px; font-size:13px; color:#cbd5e1;">${ad.bannerText}</div>
-          <button class="btn-link-action" onclick="handleLinkClick('${ad.url}')">🔗 লিংকে প্রবেশ করুন</button>
-        `;
-      } else {
-        adBody.innerHTML = `
-          <img src="${ad.img}" class="poster-img" alt="Poster Ad">
-        `;
-        startTimer(10);
-      }
-    }
-
-    // Handle Link Click and Start Countdown Timer
-    function handleLinkClick(url) {
-      window.open(url, '_blank');
-      if (!linkClicked) {
-        linkClicked = true;
-        startTimer(10);
-      }
-    }
-
-    // Timer Countdown Function
-    function startTimer(seconds) {
-      let timeLeft = seconds;
-      const timerElem = document.getElementById('ad-timer');
-      const nextBtn = document.getElementById('btn-next-ad');
-
+      let timeLeft = 10; // ১০ সেকেন্ড সময়সীমা
       timerElem.innerText = `অপেক্ষা করুন: ${timeLeft} সেকেন্ড`;
+
+      adBody.innerHTML = `
+        <div style="margin-bottom:15px; font-size:14px; color:#cbd5e1; font-weight:600;">${ad.bannerText}</div>
+        <a href="${ad.url}" target="_blank" class="btn-link-action" onclick="window.open('${ad.url}', '_blank')">🔗 লিংকে প্রবেশ করুন</a>
+      `;
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -583,7 +548,7 @@
           clearInterval(timerInterval);
           timerElem.innerText = "সময় শেষ! পরবর্তী বাটনে ক্লিক করুন।";
           nextBtn.style.display = 'block';
-          if(currentAdIndex === adList.length - 1) {
+          if(index === adList.length - 1) {
             nextBtn.innerText = "পুরস্কার সংগ্রহ করুন 🎁";
           } else {
             nextBtn.innerText = "পরবর্তী অ্যাড →";
@@ -598,14 +563,14 @@
         currentAdIndex++;
         loadAd(currentAdIndex);
       } else {
-        // All 5 Ads Finished
+        // All 5 Link Ads Finished
         document.getElementById('adModal').style.display = 'none';
         watchedToday++;
         balance += rewardPerTask;
         earned += rewardPerTask;
         
         updateUI();
-        alert('অভিনন্দন! আপনি সফলভাবে ৫টি বিজ্ঞাপন দেখেছেন। ৳ ৫.০০ যোগ করা হয়েছে।');
+        alert('অভিনন্দন! আপনি সফলভাবে ৫টি লিংক বিজ্ঞাপন দেখেছেন। ৳ ৫.০০ যোগ করা হয়েছে।');
       }
     }
 
@@ -685,4 +650,4 @@
     }
   </script>
 </body>
-</html>
+                                                             </html>
