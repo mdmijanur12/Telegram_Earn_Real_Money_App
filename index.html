@@ -198,16 +198,15 @@
     .empty-state { text-align: center; padding: 30px 10px; color: #64748b; font-size: 13px; }
     .empty-icon { font-size: 36px; margin-bottom: 8px; display: block; }
 
-    /* History Custom List Items */
-    .history-item { display: flex; justify-content: space-between; align-items: center; background: #080d1a; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-align: left; }
-    .history-left { display: flex; flex-direction: column; gap: 2px; }
-    .history-title { font-size: 13px; font-weight: 700; color: #fff; }
-    .history-sub { font-size: 11px; color: #64748b; }
+    /* History Items UI Styles */
+    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #080d1a; border: 1px solid #1a2333; border-radius: 12px; margin-bottom: 8px; }
+    .history-left { text-align: left; }
+    .history-title { font-size: 13px; font-weight: 700; color: #ffffff; }
+    .history-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
     .history-right { text-align: right; }
-    .history-amount { font-size: 14px; font-weight: 800; color: #10b981; }
-    
-    .status-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; display: inline-block; text-transform: uppercase; margin-top: 3px; }
-    .status-pending { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .history-amount { font-size: 14px; font-weight: 800; color: #facc15; }
+    .status-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
+    .status-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
     .status-paid, .status-valid { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
     .status-rejected, .status-fake { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
 
@@ -501,7 +500,7 @@
 
     <div class="section-title">👥 Your Referrals</div>
     <div id="ref-list-container">
-      <div class="card empty-state" id="ref-empty-state">
+      <div class="card empty-state">
         <span class="empty-icon" style="color:#3b82f6;">👤</span>
         No referrals yet
       </div>
@@ -549,7 +548,7 @@
 
     <div class="section-title">📋 Withdrawal History</div>
     <div id="withdraw-list-container">
-      <div class="card empty-state" id="withdraw-empty-state">
+      <div class="card empty-state">
         <span class="empty-icon">📫</span>
         No withdrawals yet
       </div>
@@ -666,7 +665,7 @@
       userRef.get().then((doc) => {
         if (doc.exists) {
           userData = doc.data();
-          userData.name = currentUserName;
+          userData.name = currentUserName; // নাম তাজা রাখা
           userData.userId = currentUserId;
         } else {
           userData = {
@@ -721,10 +720,19 @@
     // ==================== REALTIME WITHDRAWAL HISTORY ====================
     function loadWithdrawalHistory() {
       db.collection("withdrawals")
-        .where("userId", "==", currentUserId)
         .onSnapshot((snapshot) => {
           const container = document.getElementById("withdraw-list-container");
-          if (snapshot.empty) {
+          if (!container) return;
+
+          const userWithdrawals = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.userId === currentUserId) {
+              userWithdrawals.push(data);
+            }
+          });
+
+          if (userWithdrawals.length === 0) {
             container.innerHTML = `
               <div class="card empty-state">
                 <span class="empty-icon">📫</span>
@@ -734,8 +742,7 @@
           }
 
           let html = "";
-          snapshot.forEach((doc) => {
-            const data = doc.data();
+          userWithdrawals.forEach((data) => {
             const status = (data.status || "pending").toLowerCase();
             let statusClass = "status-pending";
             let statusText = "Pending";
@@ -762,16 +769,27 @@
             `;
           });
           container.innerHTML = html;
+        }, (error) => {
+          console.error("Withdrawal History Error:", error);
         });
     }
 
     // ==================== REALTIME REFERRAL HISTORY ====================
     function loadReferralHistory() {
       db.collection("users")
-        .where("referredBy", "==", currentUserId)
         .onSnapshot((snapshot) => {
           const container = document.getElementById("ref-list-container");
-          if (snapshot.empty) {
+          if (!container) return;
+
+          const userReferrals = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.referredBy === currentUserId) {
+              userReferrals.push(data);
+            }
+          });
+
+          if (userReferrals.length === 0) {
             container.innerHTML = `
               <div class="card empty-state">
                 <span class="empty-icon" style="color:#3b82f6;">👤</span>
@@ -783,8 +801,7 @@
           let html = "";
           let validRefCount = 0;
 
-          snapshot.forEach((doc) => {
-            const data = doc.data();
+          userReferrals.forEach((data) => {
             const isFake = data.status === "fake" || data.isFake === true;
             
             let badgeClass = isFake ? "status-fake" : "status-valid";
@@ -810,6 +827,8 @@
           userData.referrals = validRefCount;
           updateUI();
           container.innerHTML = html;
+        }, (error) => {
+          console.error("Referral History Error:", error);
         });
     }
 
@@ -947,7 +966,7 @@
       // ১. ইউজারের ব্যালেন্স ও উইথড্র ফায়ারবেসে আপডেট
       updateUIAndDatabase();
 
-      // ২. ফায়ারবেসে উইথড্র রিকোয়েস্টটি আলাদা কালেকশনে "pending" হিসেবে সেভ করা
+      // ২. ফায়ারবেসে উইথড্র রিকোয়েস্টটি আলাদা কালেকশনে সংরক্ষণ
       db.collection("withdrawals").add({
         userId: currentUserId,
         userName: currentUserName,
@@ -958,8 +977,6 @@
         requestedAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         alert('উইথড্র রিকোয়েস্ট সফলভাবে জমা নেওয়া হয়েছে!');
-        document.getElementById('withdraw-account').value = '';
-        document.getElementById('withdraw-amount').value = '';
       }).catch((err) => {
         console.error("Withdraw Error: ", err);
         alert('উইথড্র রিকোয়েস্ট জমা দেওয়া হয়েছে!');
