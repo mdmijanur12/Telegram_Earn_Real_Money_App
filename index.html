@@ -8,7 +8,114 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #06090e; color: #ffffff; padding: 12px; padding-bottom: 85px; }
-    
+
+    /* ================= SPLASH SCREEN STYLES ================= */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #06090e;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .splash-stage {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* মাঝের লাল সার্কেল ও লোগো */
+    .splash-main-circle {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #ff1744, #e91e63);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 35px rgba(255, 23, 68, 0.6);
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .splash-main-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .splash-main-circle span {
+      color: #ffffff;
+      font-size: 32px;
+      font-weight: 900;
+    }
+
+    /* ফ্লোটিং কয়েন ও টিভি আইকন */
+    .floating-item {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: floatAnim 3s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+
+    .float-coin { font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
+    .float-tv { font-size: 30px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
+
+    /* আইকন পজিশনিং ও ডিলে */
+    .pos-top-left { top: 25px; left: 35px; animation-delay: 0s; }
+    .pos-top-right { top: 40px; right: 30px; animation-delay: 0.7s; }
+    .pos-bottom-left { bottom: 30px; left: 45px; animation-delay: 1.4s; }
+    .pos-bottom-right { bottom: 20px; right: 35px; animation-delay: 2.1s; }
+
+    @keyframes floatAnim {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-12px) scale(1.08); }
+    }
+
+    /* লোডিং বার */
+    .splash-loading-box {
+      width: 220px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin-top: 35px;
+      overflow: hidden;
+    }
+
+    .splash-loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff1744, #facc15);
+      border-radius: 10px;
+      animation: fillLoading 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes fillLoading {
+      0% { width: 0%; }
+      60% { width: 70%; }
+      100% { width: 100%; }
+    }
+
+    .splash-text {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    /* ================= MAIN APP STYLES ================= */
     .page { display: none; }
     .active-page { display: block; }
 
@@ -18,7 +125,8 @@
     /* Home Page Styles */
     .profile-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
     .profile-left { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #fff; text-transform: uppercase; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #fff; text-transform: uppercase; overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .user-info .name { font-size: 16px; font-weight: 700; color: #ffffff; }
     .user-info .id { font-size: 12px; color: #475569; margin-top: 2px; }
     .active-badge { background: #131428; border: 1px solid #3730a3; color: #818cf8; font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
@@ -133,47 +241,36 @@
       text-align: center;
       position: relative;
     }
-    .ad-step-indicator {
-      font-size: 12px;
-      color: #818cf8;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .ad-timer {
-      font-size: 14px;
-      color: #facc15;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-    .btn-next-ad {
-      width: 100%;
-      background: #10b981;
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      display: none;
-      margin-top: 10px;
-    }
-    .btn-link-action {
-      background: #6366f1;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-size: 15px;
-      display: inline-block;
-      margin-bottom: 15px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }
+    .ad-step-indicator { font-size: 12px; color: #818cf8; font-weight: bold; margin-bottom: 8px; }
+    .ad-timer { font-size: 14px; color: #facc15; margin-bottom: 15px; font-weight: bold; }
+    .btn-next-ad { width: 100%; background: #10b981; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; display: none; margin-top: 10px; }
+    .btn-link-action { background: #6366f1; color: #fff; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-size: 15px; display: inline-block; margin-bottom: 15px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
   </style>
 </head>
 <body>
+
+  <!-- ==================== SPLASH / OPENING SCREEN ==================== -->
+  <div id="splash-screen">
+    <div class="splash-stage">
+      <!-- মাঝের ডাইনামিক সার্কেল (লোগো/ছবি না থাকলে টেক্সট দেখাবে) -->
+      <div class="splash-main-circle" id="splash-logo-container">
+        <span id="splash-logo">ER</span>
+      </div>
+
+      <!-- ফ্লোটিং কয়েন ও টিভি -->
+      <div class="floating-item float-coin pos-top-left">🪙</div>
+      <div class="floating-item float-coin pos-top-right">🪙</div>
+      <div class="floating-item float-tv pos-bottom-left">📺</div>
+      <div class="floating-item float-tv pos-bottom-right">📺</div>
+    </div>
+
+    <!-- লোডিং বার -->
+    <div class="splash-loading-box">
+      <div class="splash-loading-bar"></div>
+    </div>
+    <div class="splash-text">আপনার অ্যাকাউন্ট প্রস্তুত করা হচ্ছে...</div>
+  </div>
+
 
   <!-- ==================== 1. HOME PAGE ==================== -->
   <div id="home" class="page active-page">
@@ -283,7 +380,6 @@
 
   <!-- ==================== 2. SUPPORT PAGE ==================== -->
   <div id="support" class="page">
-    
     <div class="video-card">
       <div class="play-btn">▶</div>
       <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">টিউটোরিয়াল ভিডিও</div>
@@ -317,12 +413,10 @@
         <div style="font-size:10px; color:#64748b; margin-top:4px;">ই-মেইলে মেসেজ দিন</div>
       </div>
     </div>
-
   </div>
 
   <!-- ==================== 3. REFERRAL PAGE ==================== -->
   <div id="referral" class="page">
-    
     <div class="ref-header-title">Referral</div>
 
     <div class="ref-banner">
@@ -330,7 +424,6 @@
       <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Invite & Earn</div>
       <div style="font-size:11px; color:#94a3b8;">Earn <span style="color:#facc15; font-weight:bold;">৳ 50.00</span> bonus per real referral</div>
 
-      <!-- 3 Small Boxes -->
       <div class="stats-container" style="margin-top:15px;">
         <div class="stat-box">
           <div class="stat-value" id="ref-total-count">0</div>
@@ -347,7 +440,6 @@
       </div>
     </div>
 
-    <!-- Referral Link Box -->
     <div class="card">
       <div class="form-label">YOUR REFERRAL LINK</div>
       <div class="ref-link-box">
@@ -360,18 +452,15 @@
       </button>
     </div>
 
-    <!-- Referral History Section -->
     <div class="section-title">👥 Your Referrals</div>
     <div class="card empty-state" id="ref-empty-state">
       <span class="empty-icon" style="color:#3b82f6;">👤</span>
       No referrals yet
     </div>
-
   </div>
 
   <!-- ==================== 4. WALLET PAGE ==================== -->
   <div id="wallet" class="page">
-    
     <div class="wallet-header-title">Wallet</div>
 
     <div class="available-box">
@@ -382,7 +471,6 @@
       <div style="font-size:10px; color:#475569;">Withdrawable</div>
     </div>
 
-    <!-- Withdraw Request Form -->
     <div class="card">
       <div class="ad-title" style="margin-bottom:12px;">💸 Withdraw Request</div>
 
@@ -410,13 +498,11 @@
       <button class="btn-withdraw" onclick="processWithdraw()">Withdraw Now →</button>
     </div>
 
-    <!-- Withdrawal History Section -->
     <div class="section-title">📋 Withdrawal History</div>
     <div class="card empty-state">
       <span class="empty-icon">📫</span>
       No withdrawals yet
     </div>
-
   </div>
 
   <!-- ==================== AD DISPLAY MODAL ==================== -->
@@ -425,9 +511,7 @@
       <div class="ad-step-indicator" id="ad-step-indicator">বিজ্ঞাপন ১ / ৫ (লিংক অ্যাড)</div>
       <div class="ad-timer" id="ad-timer">লিংকে প্রবেশ করুন</div>
       
-      <div id="ad-body">
-        <!-- Dynamic Ad Content Goes Here -->
-      </div>
+      <div id="ad-body"></div>
 
       <button class="btn-next-ad" id="btn-next-ad" onclick="nextAd()">পরবর্তী অ্যাড →</button>
     </div>
@@ -450,7 +534,16 @@
   </div>
 
   <script>
-    // Telegram WebApp Setup & Dynamic Data Fetching
+    // App Launch Timeout Setup (2.5s)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+      }, 2500);
+    });
+
+    // Telegram WebApp Setup
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
@@ -458,7 +551,7 @@
     let currentUserId = "1000000000";
     let currentUserName = "User";
 
-    // Auto Fetch Telegram Profile Data
+    // Dynamic Profile Fetching (App Logo & Avatar Setup)
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
       const user = tg.initDataUnsafe.user;
       currentUserName = (user.first_name || '') + ' ' + (user.last_name || '');
@@ -468,20 +561,31 @@
       document.getElementById('user-fullname').innerText = currentUserName;
       document.getElementById('user-tg-id').innerText = currentUserId;
 
-      const fLetter = user.first_name ? user.first_name[0] : 'U';
+      const fLetter = user.first_name ? user.first_name[0] : 'A';
       const lLetter = user.last_name ? user.last_name[0] : '';
-      document.getElementById('avatar-letters').innerText = (fLetter + lLetter).toUpperCase();
+      const avatarLetters = (fLetter + lLetter).toUpperCase();
+
+      if (user.photo_url) {
+        document.getElementById('avatar-letters').innerHTML = `<img src="${user.photo_url}" alt="Profile">`;
+        document.getElementById('splash-logo-container').innerHTML = `<img src="${user.photo_url}" alt="App Logo">`;
+      } else {
+        document.getElementById('avatar-letters').innerText = avatarLetters;
+        document.getElementById('splash-logo-text').innerText = fLetter.toUpperCase();
+      }
     } else {
       document.getElementById('user-fullname').innerText = "Guest User";
       document.getElementById('user-tg-id').innerText = currentUserId;
       document.getElementById('avatar-letters').innerText = "GU";
+      document.getElementById('splash-logo-text').innerText = "A";
     }
 
-    // Assign Unique Referral Link per User
-    const botUsername = "@SM24money_bot"; // আপনার টেলিগ্রাম বট ইউজারনেম
+    // App Logo Customization (যদি নির্দিষ্ট কোনো অ্যাপ লোগো URL ব্যবহার করতে চান):
+    // const customAppLogoUrl = "YOUR_APP_LOGO_IMAGE_URL.png";
+    // document.getElementById('splash-logo-container').innerHTML = `<img src="${customAppLogoUrl}" alt="App Logo">`;
+
+    const botUsername = "@SM24money_bot";
     document.getElementById('ref-link').value = `https://t.me/${botUsername}?start=${currentUserId}`;
 
-    // Page Switching Logic
     function showPage(pageId, element) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -490,7 +594,6 @@
       window.scrollTo(0, 0);
     }
 
-    // Default Values
     let balance = 0.00;
     let earned = 0.00;
     let withdrawn = 0.00;
@@ -500,7 +603,6 @@
     const minWithdraw = 500.00;
     const refBonus = 50.00;
 
-    // 5 Link Ads Configuration
     const adList = [
       { title: '১ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505836' },
       { title: '২য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505835' },
@@ -513,7 +615,6 @@
     let timerInterval = null;
     let linkClicked = false;
 
-    // Start 5-Ads Process
     function startAdSequence() {
       if(watchedToday >= taskLimit) {
         alert('আজকের দৈনিক ৪০ টি কাজের লিমিট শেষ!');
@@ -524,7 +625,6 @@
       loadAd(currentAdIndex);
     }
 
-    // Render Ad in Modal
     function loadAd(index) {
       clearInterval(timerInterval);
       const ad = adList[index];
@@ -543,7 +643,6 @@
       `;
     }
 
-    // Handle Link Click and Start Countdown Timer
     function handleLinkClick(url) {
       window.open(url, '_blank');
       if (!linkClicked) {
@@ -552,7 +651,6 @@
       }
     }
 
-    // Timer Countdown Function
     function startTimer(seconds) {
       let timeLeft = seconds;
       const timerElem = document.getElementById('ad-timer');
@@ -578,13 +676,11 @@
       }, 1000);
     }
 
-    // Next Ad Action
     function nextAd() {
       if(currentAdIndex < adList.length - 1) {
         currentAdIndex++;
         loadAd(currentAdIndex);
       } else {
-        // All 5 Link Ads Finished
         document.getElementById('adModal').style.display = 'none';
         watchedToday++;
         balance += rewardPerTask;
@@ -595,26 +691,6 @@
       }
     }
 
-    // Real Referral Add Verification Logic
-    function registerRealReferral(isReal) {
-      if (isReal) {
-        balance += refBonus;
-        earned += refBonus;
-
-        let currentRefs = parseInt(document.getElementById('stat-referrals').innerText) + 1;
-        document.getElementById('stat-referrals').innerText = currentRefs;
-        document.getElementById('ref-total-count').innerText = currentRefs;
-        document.getElementById('ref-active-count').innerText = currentRefs;
-        document.getElementById('ref-earned-amount').innerText = (currentRefs * refBonus).toFixed(2);
-
-        updateUI();
-        alert('নতুন রিয়েল রেফারেল সফলভাবে যুক্ত হয়েছে! ৳ ৫০.০০ বোনাস দেওয়া হয়েছে।');
-      } else {
-        alert('সতর্কতা: ফেক রেফারেল সনাক্ত হওয়ায় কোনো বোনাস দেওয়া হয়নি!');
-      }
-    }
-
-    // Update Overall Interface Values
     function updateUI() {
       document.getElementById('user-balance').innerText = balance.toFixed(2);
       document.getElementById('wallet-balance').innerText = balance.toFixed(2);
@@ -623,39 +699,24 @@
       document.getElementById('prog-count').innerText = watchedToday;
     }
 
-    // Withdrawal Request Validation (Min 500 TK)
     function processWithdraw() {
       const method = document.getElementById('withdraw-method').value;
       const account = document.getElementById('withdraw-account').value;
       const amount = parseFloat(document.getElementById('withdraw-amount').value);
 
-      if(!method) {
-        alert('অনুগ্রহ করে পেমেন্ট মেথড সিলেক্ট করুন!');
-        return;
-      }
-      if(!account) {
-        alert('অনুগ্রহ করে অ্যাকাউন্ট নম্বর লিখুন!');
-        return;
-      }
-      if(isNaN(amount) || amount < minWithdraw) {
-        alert('মিনিমাম উইথড্র ৫০০.০০ টাকা!');
-        return;
-      }
-      if(amount > balance) {
-        alert('আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!');
-        return;
-      }
+      if(!method) { alert('অনুগ্রহ করে পেমেন্ট মেথড সিলেক্ট করুন!'); return; }
+      if(!account) { alert('অনুগ্রহ করে অ্যাকাউন্ট নম্বর লিখুন!'); return; }
+      if(isNaN(amount) || amount < minWithdraw) { alert('মিনিমাম উইথড্র ৫০০.০০ টাকা!'); return; }
+      if(amount > balance) { alert('আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!'); return; }
 
       balance -= amount;
       withdrawn += amount;
 
       document.getElementById('stat-withdrawn').innerText = withdrawn.toFixed(2);
       updateUI();
-
       alert('উইথড্র রিকোয়েস্ট সফলভাবে জমা নেওয়া হয়েছে!');
     }
 
-    // Copy Unique Referral Link
     function copyRef() {
       const copyText = document.getElementById("ref-link");
       copyText.select();
@@ -663,7 +724,6 @@
       alert("আপনার রেফারেল লিংক কপি করা হয়েছে!");
     }
 
-    // Share Unique Referral Link directly on Telegram
     function shareTelegram() {
       const link = document.getElementById("ref-link").value;
       const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("প্রতি রিয়েল রেফারেই ৫০ টাকা বোনাস পেতে এখনই জয়েন করুন!")}`;
