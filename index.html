@@ -184,7 +184,6 @@
   <!-- ==================== 1. HOME PAGE ==================== -->
   <div id="home" class="page active-page">
     
-    <!-- Profile Info Header -->
     <div class="profile-section">
       <div class="profile-left">
         <div class="avatar" id="avatar-letters">U</div>
@@ -196,14 +195,12 @@
       <div class="active-badge">★ Active</div>
     </div>
 
-    <!-- Total Balance Main Card -->
     <div class="balance-card">
       <div class="balance-label">TOTAL BALANCE</div>
       <div class="balance-amount">
         <span id="user-balance">0.00</span> <span class="currency">টাকা</span>
       </div>
 
-      <!-- 3 Small Sub Boxes -->
       <div class="stats-container">
         <div class="stat-box">
           <div class="stat-value"><span id="stat-earned">0.00</span></div>
@@ -222,14 +219,12 @@
       </div>
     </div>
 
-    <!-- Moving Notice Text (Right to Left Scrolling) -->
     <div class="notice-marquee-box">
       <div class="notice-text">
         📢 এখানে আপনারা ১০০% পেমেন্ট পাবে। সঠিক নিয়ম অনুযায়ী কাজ করতে হবে।অন্যথায় পেমেন্ট পাবেন না।
       </div>
     </div>
 
-    <!-- Ad Watch Section -->
     <div class="ad-card">
       <div class="ad-header">
         <div class="ad-title">📺 বিজ্ঞাপন দেখে আয় করুন</div>
@@ -255,7 +250,6 @@
       </div>
     </div>
 
-    <!-- Links Section -->
     <div class="action-row">
       <div class="action-left">
         <div class="action-icon">📢</div>
@@ -278,7 +272,6 @@
       <button class="btn-action" onclick="showPage('support', document.querySelectorAll('.nav-item')[1])">দেখুন</button>
     </div>
 
-    <!-- Scroll Content Tasks -->
     <div class="section-title">⚡ Tasks</div>
     <div class="card empty-state">
       <span class="empty-icon">📋</span>
@@ -289,7 +282,6 @@
 
   <!-- ==================== 2. SUPPORT PAGE ==================== -->
   <div id="support" class="page">
-    
     <div class="video-card">
       <div class="play-btn">▶</div>
       <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">টিউটোরিয়াল ভিডিও</div>
@@ -323,12 +315,10 @@
         <div style="font-size:10px; color:#64748b; margin-top:4px;">ই-মেইলে মেসেজ দিন</div>
       </div>
     </div>
-
   </div>
 
   <!-- ==================== 3. REFERRAL PAGE ==================== -->
   <div id="referral" class="page">
-    
     <div class="ref-header-title">Referral</div>
 
     <div class="ref-banner">
@@ -336,7 +326,6 @@
       <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Invite & Earn</div>
       <div style="font-size:11px; color:#94a3b8;">Earn <span style="color:#facc15; font-weight:bold;">৳ 50.00</span> bonus per real referral</div>
 
-      <!-- 3 Small Boxes -->
       <div class="stats-container" style="margin-top:15px;">
         <div class="stat-box">
           <div class="stat-value" id="ref-total-count">0</div>
@@ -353,7 +342,6 @@
       </div>
     </div>
 
-    <!-- Referral Link Box -->
     <div class="card">
       <div class="form-label">YOUR REFERRAL LINK</div>
       <div class="ref-link-box">
@@ -366,18 +354,15 @@
       </button>
     </div>
 
-    <!-- Referral History Section -->
     <div class="section-title">👥 Your Referrals</div>
     <div class="card empty-state" id="ref-empty-state">
       <span class="empty-icon" style="color:#3b82f6;">👤</span>
       No referrals yet
     </div>
-
   </div>
 
   <!-- ==================== 4. WALLET PAGE ==================== -->
   <div id="wallet" class="page">
-    
     <div class="wallet-header-title">Wallet</div>
 
     <div class="available-box">
@@ -388,7 +373,6 @@
       <div style="font-size:10px; color:#475569;">Withdrawable</div>
     </div>
 
-    <!-- Withdraw Request Form -->
     <div class="card">
       <div class="ad-title" style="margin-bottom:12px;">💸 Withdraw Request</div>
 
@@ -416,13 +400,11 @@
       <button class="btn-withdraw" onclick="processWithdraw()">Withdraw Now →</button>
     </div>
 
-    <!-- Withdrawal History Section -->
     <div class="section-title">📋 Withdrawal History</div>
     <div class="card empty-state">
       <span class="empty-icon">📫</span>
       No withdrawals yet
     </div>
-
   </div>
 
   <!-- ==================== AD DISPLAY MODAL ==================== -->
@@ -431,9 +413,7 @@
       <div class="ad-step-indicator" id="ad-step-indicator">বিজ্ঞাপন ১ / ৫ (লিংক অ্যাড)</div>
       <div class="ad-timer" id="ad-timer">লিংকে প্রবেশ করুন</div>
       
-      <div id="ad-body">
-        <!-- Dynamic Ad Content Goes Here -->
-      </div>
+      <div id="ad-body"></div>
 
       <button class="btn-next-ad" id="btn-next-ad" onclick="nextAd()">পরবর্তী অ্যাড →</button>
     </div>
@@ -457,7 +437,7 @@
 
   <!-- ==================== SCRIPT & FIREBASE INTEGRATION ==================== -->
   <script>
-    // ১. আপনার ফায়ারবেস কনফিগারেশন বসান (Firebase Console থেকে প্রাপ্ত)
+    // ১. ফায়ারবেস কনফিগারেশন
     const firebaseConfig = {
       apiKey: "AIzaSyCoLposoTqJ51RoYWXhIXfnKb5_v27nF4I",
       authDomain: "sm24-money.firebaseapp.com",
@@ -467,19 +447,20 @@
       appId: "1:104563474411:web:7364736a11a18afeb1a3ae"
     };
 
-    // ফায়ারবেস চালু করা
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     // Telegram WebApp Setup
     const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
+    if (tg) {
+      tg.ready();
+      try { tg.expand(); } catch (e) {}
+    }
 
     let currentUserId = "1000000000";
     let currentUserName = "User";
 
-    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
       const user = tg.initDataUnsafe.user;
       currentUserName = ((user.first_name || '') + ' ' + (user.last_name || '')).trim() || "User";
       currentUserId = user.id ? user.id.toString() : "1000000000";
@@ -496,11 +477,9 @@
       document.getElementById('avatar-letters').innerText = "GU";
     }
 
-    // Referral Link Assign
-    const botUsername = "@SM24money_bot";
+    const botUsername = "SM24money_bot";
     document.getElementById('ref-link').value = `https://t.me/${botUsername}?start=${currentUserId}`;
 
-    // App Values & Rules
     const taskLimit = 40;
     const rewardPerTask = 5.00;
     const minWithdraw = 500.00;
@@ -514,16 +493,13 @@
       referrals: 0
     };
 
-    // Firestore Document Reference
     const userRef = db.collection("users").doc(currentUserId);
 
-    // ফায়ারবেস থেকে তথ্য লোড করা
     function loadUserData() {
       userRef.get().then((doc) => {
         if (doc.exists) {
           userData = doc.data();
         } else {
-          // নতুন ইউজার হলে ডাটাবেসে ফাইল ওপেন করা
           userRef.set({
             name: currentUserName,
             balance: 0.00,
@@ -540,16 +516,15 @@
       });
     }
 
-    // UI এবং Firebase ডাটা একসাথে আপডেট করা
     function updateUIAndDatabase() {
       updateUI();
-      userRef.update({
+      userRef.set({
         balance: userData.balance,
         earned: userData.earned,
         withdrawn: userData.withdrawn,
         watchedToday: userData.watchedToday,
         referrals: userData.referrals
-      });
+      }, { merge: true });
     }
 
     function updateUI() {
@@ -567,21 +542,20 @@
       document.getElementById('ref-earned-amount').innerText = (refs * refBonus).toFixed(2);
     }
 
-    // পেজ লোড হলেই ফায়ারবেস ডাটা কল করা
     window.onload = function() {
       loadUserData();
     };
 
-    // Page Switching Logic
     function showPage(pageId, element) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(pageId).classList.add('active-page');
-      element.classList.add('active');
+      if (element) {
+        element.classList.add('active');
+      }
       window.scrollTo(0, 0);
     }
 
-    // 5 Link Ads Configuration
     const adList = [
       { title: '১ম বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505836' },
       { title: '২য় বিজ্ঞাপন (লিংক অ্যাড)', url: 'https://omg10.com/4/11505835' },
@@ -621,8 +595,9 @@
         <button class="btn-link-action" onclick="handleLinkClick('${ad.url}')">🔗 লিংকে প্রবেশ করুন</button>
       `;
     }
-    
-      // Monetag SDK কল করা
+
+    // সংশোধনকৃত handleLinkClick ফাংশন
+    function handleLinkClick(url) {
       if (typeof show_11506670 === 'function') {
         show_11506670().then(() => {
           if (!linkClicked) {
@@ -631,10 +606,13 @@
           }
         }).catch((e) => {
           console.error("Ad Error:", e);
-          alert("বিজ্ঞাপন লোড হতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+          window.open(url, '_blank');
+          if (!linkClicked) {
+            linkClicked = true;
+            startTimer(10);
+          }
         });
       } else {
-        // যদি কোনো কারণে SDK লোড হতে দেরি হয়, ব্যাকআপ হিসেবে ইউআরএল ওপেন করবে
         window.open(url, '_blank');
         if (!linkClicked) {
           linkClicked = true;
@@ -642,7 +620,6 @@
         }
       }
     }
-
 
     function startTimer(seconds) {
       let timeLeft = seconds;
@@ -676,7 +653,6 @@
       } else {
         document.getElementById('adModal').style.display = 'none';
         
-        // ডাটাবেসে ব্যালেন্স সেভ
         userData.watchedToday = (userData.watchedToday || 0) + 1;
         userData.balance = (userData.balance || 0) + rewardPerTask;
         userData.earned = (userData.earned || 0) + rewardPerTask;
