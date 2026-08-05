@@ -19,13 +19,121 @@
     .page { display: none; }
     .active-page { display: block; }
 
+    /* ==================== SPLASH SCREEN ANIMATION STYLES ==================== */
+    #splash-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: radial-gradient(circle at center, #2d0b1e 0%, #06090e 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    .splash-center {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .main-circle {
+      width: 130px;
+      height: 130px;
+      background: #ff1e56;
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(255, 30, 86, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 45px;
+      font-weight: 900;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .main-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Floating Icons */
+    .float-icon {
+      position: absolute;
+      font-size: 26px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .icon-1 { top: -10px; left: -30px; animation-delay: 0s; }
+    .icon-2 { top: 30px; right: -35px; animation-delay: 0.5s; }
+    .icon-3 { bottom: -60px; left: -20px; animation-delay: 1s; }
+    .icon-4 { bottom: -60px; right: -30px; animation-delay: 1.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(8deg); }
+    }
+
+    .app-title-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 40px;
+      letter-spacing: 0.5px;
+    }
+
+    .app-subtitle-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 6px;
+      margin-bottom: 40px;
+    }
+
+    .loading-container {
+      width: 75%;
+      max-width: 280px;
+      text-align: center;
+    }
+
+    .loading-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .loading-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff1e56, #facc15);
+      border-radius: 10px;
+      animation: fillProgress 3s linear forwards;
+    }
+
+    @keyframes fillProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .loading-status-text {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
     /* Common UI Styles */
     .card { background: #0d131f; border-radius: 18px; padding: 16px; border: 1px solid #1a2333; margin-bottom: 12px; }
 
     /* Home Page Styles */
     .profile-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
     .profile-left { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #fff; text-transform: uppercase; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #fff; text-transform: uppercase; overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .user-info .name { font-size: 16px; font-weight: 700; color: #ffffff; }
     .user-info .id { font-size: 12px; color: #475569; margin-top: 2px; }
     .active-badge { background: #131428; border: 1px solid #3730a3; color: #818cf8; font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
@@ -181,6 +289,30 @@
   </style>
 </head>
 <body>
+
+  <!-- ==================== SPLASH SCREEN ANIMATION ==================== -->
+  <div id="splash-screen">
+    <div class="splash-center">
+      <div class="main-circle" id="splash-avatar">
+        <!-- ডায়নামিক ছবি/লোগো লোড হবে -->
+        💰
+      </div>
+      <div class="float-icon icon-1">🪙</div>
+      <div class="float-icon icon-2">🪙</div>
+      <div class="float-icon icon-3">📺</div>
+      <div class="float-icon icon-4">💰</div>
+    </div>
+
+    <div class="app-title-text" id="splash-title">১০০% রিয়েল বট</div>
+    <div class="app-subtitle-text">বিজ্ঞাপন দেখুন ও আয় করুন</div>
+
+    <div class="loading-container">
+      <div class="loading-bar-bg">
+        <div class="loading-bar-fill"></div>
+      </div>
+      <div class="loading-status-text">আপনার অ্যাকাউন্ট প্রস্তুত করা হচ্ছে...</div>
+    </div>
+  </div>
 
   <!-- ==================== 1. HOME PAGE ==================== -->
   <div id="home" class="page active-page">
@@ -469,14 +601,32 @@
       document.getElementById('user-fullname').innerText = currentUserName;
       document.getElementById('user-tg-id').innerText = currentUserId;
 
-      const fLetter = user.first_name ? user.first_name[0] : 'U';
-      const lLetter = user.last_name ? user.last_name[0] : '';
-      document.getElementById('avatar-letters').innerText = (fLetter + lLetter).toUpperCase();
+      // প্রোফাইল ফটো বা অ্যাভাটার সেট করা
+      if (user.photo_url) {
+        document.getElementById('avatar-letters').innerHTML = `<img src="${user.photo_url}" alt="Profile">`;
+        document.getElementById('splash-avatar').innerHTML = `<img src="${user.photo_url}" alt="Profile">`;
+      } else {
+        const fLetter = user.first_name ? user.first_name[0] : 'U';
+        const lLetter = user.last_name ? user.last_name[0] : '';
+        const initials = (fLetter + lLetter).toUpperCase();
+        document.getElementById('avatar-letters').innerText = initials;
+        document.getElementById('splash-avatar').innerText = initials;
+      }
     } else {
       document.getElementById('user-fullname').innerText = "Guest User";
       document.getElementById('user-tg-id').innerText = currentUserId;
       document.getElementById('avatar-letters').innerText = "GU";
+      document.getElementById('splash-avatar').innerText = "GU";
     }
+
+    // অটোমেটিক ৩ সেকেন্ড পর স্প্ল্যাশ এনিমেশন হাইড করা
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(() => { splash.style.display = 'none'; }, 500);
+      }
+    }, 3000);
 
     const botUsername = "SM24money_bot";
     document.getElementById('ref-link').value = `https://t.me/${botUsername}?start=${currentUserId}`;
@@ -559,7 +709,7 @@
 
     // ==================== MONETAG IN-APP 5-ADS SEQUENCE LOGIC ====================
     let currentAdStep = 0;
-    const totalAdsPerTask = 5; // ৫টি ইন-অ্যাপ অ্যাড দেখতে হবে
+    const totalAdsPerTask = 5;
     let timerInterval = null;
 
     function startAdSequence() {
@@ -592,7 +742,6 @@
       if (typeof show_11506670 === 'function') {
         show_11506670()
           .then(() => {
-            // ১টি ইন-অ্যাপ অ্যাড দেখা সফল হলে
             handleAdSuccess();
           })
           .catch((e) => {
@@ -611,7 +760,7 @@
       
       adBody.innerHTML = '<p style="color:#4ade80; font-weight:bold; font-size:15px; margin-bottom:10px;">✓ অ্যাড দেখা সম্পন্ন হয়েছে!</p>';
       
-      let timeLeft = 5; // প্রতি অ্যাডের পর ৫ সেকেন্ড অপেক্ষা
+      let timeLeft = 5;
       timerElem.innerText = `অপেক্ষা করুন: ${timeLeft} সেকেন্ড`;
 
       clearInterval(timerInterval);
@@ -621,7 +770,7 @@
           timerElem.innerText = `অপেক্ষা করুন: ${timeLeft} সেকেন্ড`;
         } else {
           clearInterval(timerInterval);
-          currentAdStep++; // ১টি কাউন্ট বাড়লো
+          currentAdStep++;
 
           if (currentAdStep < totalAdsPerTask) {
             timerElem.innerText = `বিজ্ঞাপন ${currentAdStep}/${totalAdsPerTask} সম্পন্ন!`;
@@ -629,7 +778,6 @@
             nextBtn.onclick = showNextInAppAdStep;
             nextBtn.style.display = 'block';
           } else {
-            // ৫টি অ্যাড সম্পূর্ণ সম্পন্ন হলে
             timerElem.innerText = "🎉 অভিনন্দন! ৫টি বিজ্ঞাপন সফলভাবে দেখা হয়েছে।";
             nextBtn.innerText = "পুরস্কার সংগ্রহ করুন (৳ ৫.০০) 🎁";
             nextBtn.onclick = claimFinalReward;
@@ -642,7 +790,6 @@
     function claimFinalReward() {
       document.getElementById('adModal').style.display = 'none';
 
-      // ব্যালেন্স ও টাস্ক কাউন্ট আপডেট
       userData.watchedToday = (userData.watchedToday || 0) + 1;
       userData.balance = (userData.balance || 0) + rewardPerTask;
       userData.earned = (userData.earned || 0) + rewardPerTask;
