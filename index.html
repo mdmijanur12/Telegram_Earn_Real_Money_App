@@ -886,21 +886,32 @@
         <button class="btn-link-action" onclick="playMonetagAd()">🎬 বিজ্ঞাপন #${currentAdStep + 1} দেখুন</button>
       `;
     }
-
-    function playMonetagAd() {
-      if (typeof show_11506670 === 'function') {
-        show_11506670()
+function playMonetagAd() {
+  if (typeof show_11506670 === 'function') {
+    
+    // ১ নম্বর কোড: প্রথমে ফুলস্ক্রিন রিওয়ার্ডেড এড ট্রাই করবে
+    show_11506670()
+      .then(() => {
+        handleAdSuccess();
+      })
+      .catch((e) => {
+        console.warn("নরমাল এড লোড হয়নি, Popunder ট্রাই করা হচ্ছে...", e);
+        
+        // ২ নম্বর কোড: ১মটি ফেল করলে Popunder এড চালু হবে
+        show_11506670('pop')
           .then(() => {
             handleAdSuccess();
           })
-          .catch((e) => {
-            console.error("Ad Error:", e);
-            alert("বিজ্ঞাপন লোড হতে সমস্যা হয়েছে। আপনার AdBlocker বন্ধ আছে কিনা নিশ্চিত করুন।");
+          .catch((err) => {
+            console.error("দুটি এডই ব্যর্থ হয়েছে:", err);
+            alert("বিজ্ঞাপন লোড হতে সমস্যা হয়েছে। অনুগ্রহ করে AdBlocker বন্ধ করুন।");
           });
-      } else {
-        alert("বিজ্ঞাপন নেটওয়ার্কের সাথে কানেক্ট করা যাচ্ছে না। AdBlocker বন্ধ করুন।");
-      }
-    }
+      });
+
+  } else {
+    alert("বিজ্ঞাপন নেটওয়ার্কের সাথে কানেক্ট করা যাচ্ছে না। AdBlocker বন্ধ করুন।");
+  }
+}
 
     function handleAdSuccess() {
       const adBody = document.getElementById('ad-body');
