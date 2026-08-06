@@ -3,7 +3,7 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Earn Real Money</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
@@ -13,10 +13,32 @@
   <script src='https://libtl.com/sdk.js' data-zone='11506670' data-sdk='show_11506670'></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #06090e; color: #ffffff; padding: 12px; padding-bottom: 85px; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    }
     
-    .page { display: none; }
+    body { 
+      background-color: #06090e; 
+      color: #ffffff; 
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      width: 100%;
+      padding-bottom: 90px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      padding: 14px;
+      margin: 0 auto;
+    }
+    
+    .page { display: none; width: 100%; }
     .active-page { display: block; }
 
     /* ==================== SPLASH SCREEN ANIMATION STYLES ==================== */
@@ -41,15 +63,15 @@
     }
 
     .main-circle {
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       background: #ff1e56;
       border-radius: 50%;
       box-shadow: 0 0 40px rgba(255, 30, 86, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 45px;
+      font-size: 42px;
       font-weight: 900;
       color: #fff;
       overflow: hidden;
@@ -61,10 +83,9 @@
       object-fit: cover;
     }
 
-    /* Floating Icons */
     .float-icon {
       position: absolute;
-      font-size: 26px;
+      font-size: 24px;
       animation: float 3s ease-in-out infinite;
     }
 
@@ -82,15 +103,14 @@
       font-size: 20px;
       font-weight: 800;
       color: #ffffff;
-      margin-top: 40px;
-      letter-spacing: 0.5px;
+      margin-top: 30px;
     }
 
     .app-subtitle-text {
       font-size: 13px;
       color: #cbd5e1;
       margin-top: 6px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .loading-container {
@@ -105,7 +125,7 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .loading-bar-fill {
@@ -122,34 +142,67 @@
     }
 
     .loading-status-text {
-      font-size: 13px;
+      font-size: 12px;
       color: #94a3b8;
     }
 
-    /* Common UI Styles */
-    .card { background: #0d131f; border-radius: 18px; padding: 16px; border: 1px solid #1a2333; margin-bottom: 12px; }
+    /* Common Card Styles */
+    .card { 
+      background: #0d131f; 
+      border-radius: 18px; 
+      padding: 16px; 
+      border: 1px solid #1a2333; 
+      margin-bottom: 12px; 
+      width: 100%;
+    }
 
-    /* Home Page Styles */
-    .profile-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+    /* Home Page Layout */
+    .profile-section { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      margin-bottom: 15px; 
+      width: 100%;
+    }
     .profile-left { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: #fff; text-transform: uppercase; overflow: hidden; }
+    .avatar { 
+      width: 48px; 
+      height: 48px; 
+      border-radius: 50%; 
+      background: linear-gradient(135deg, #818cf8, #6366f1); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: bold; 
+      font-size: 16px; 
+      color: #fff; 
+      text-transform: uppercase; 
+      overflow: hidden; 
+      flex-shrink: 0;
+    }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .user-info .name { font-size: 16px; font-weight: 700; color: #ffffff; }
-    .user-info .id { font-size: 12px; color: #475569; margin-top: 2px; }
-    .active-badge { background: #131428; border: 1px solid #3730a3; color: #818cf8; font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+    .user-info .id { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .active-badge { background: #131428; border: 1px solid #3730a3; color: #818cf8; font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap; }
 
-    .balance-card { background: linear-gradient(180deg, #181538, #0e0d21); border-radius: 20px; padding: 18px; border: 1px solid #232048; margin-bottom: 12px; }
-    .balance-label { font-size: 10px; letter-spacing: 1px; color: #94a3b8; font-weight: 700; }
-    .balance-amount { font-size: 36px; font-weight: 800; color: #ffffff; margin: 6px 0; display: flex; align-items: baseline; gap: 6px; }
+    .balance-card { 
+      background: linear-gradient(180deg, #181538, #0e0d21); 
+      border-radius: 20px; 
+      padding: 18px; 
+      border: 1px solid #232048; 
+      margin-bottom: 12px; 
+      width: 100%;
+    }
+    .balance-label { font-size: 11px; letter-spacing: 1px; color: #94a3b8; font-weight: 700; }
+    .balance-amount { font-size: 34px; font-weight: 800; color: #ffffff; margin: 6px 0; display: flex; align-items: baseline; gap: 6px; }
     .currency { font-size: 18px; color: #facc15; font-weight: 700; }
 
-    .stats-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
-    .stat-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .stats-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; width: 100%; }
+    .stat-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 10px 4px; text-align: center; }
     .stat-value { font-size: 14px; font-weight: 700; color: #ffffff; }
     .stat-curr { font-size: 10px; color: #facc15; }
     .stat-label { font-size: 10px; color: #64748b; margin-top: 4px; }
 
-    /* Moving Notice / Marquee Styles */
     .notice-marquee-box {
       background: rgba(234, 179, 8, 0.08);
       border: 1px solid rgba(234, 179, 8, 0.2);
@@ -158,8 +211,7 @@
       margin-bottom: 12px;
       overflow: hidden;
       white-space: nowrap;
-      display: flex;
-      align-items: center;
+      width: 100%;
     }
     .notice-text {
       display: inline-block;
@@ -174,32 +226,59 @@
       100% { transform: translate(-100%, 0); }
     }
 
-    .ad-card { background: #0b1019; border-radius: 18px; padding: 16px; border: 1px solid #1e293b; margin-bottom: 12px; }
+    .ad-card { background: #0b1019; border-radius: 18px; padding: 16px; border: 1px solid #1e293b; margin-bottom: 12px; width: 100%; }
     .ad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .ad-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .reward-badge { background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); color: #facc15; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 12px; }
 
-    .counter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .counter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; width: 100%; }
     .counter-box { background: #111827; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid #1e293b; }
     .counter-num { font-size: 18px; font-weight: 800; color: #ffffff; }
     .counter-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
 
-    .btn-yellow { width: 100%; background: linear-gradient(180deg, #facc15, #eab308); color: #000000; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    /* Button Fixed Full Width Styles */
+    .btn-yellow { 
+      width: 100%; 
+      background: linear-gradient(180deg, #facc15, #eab308); 
+      color: #000000; 
+      border: none; 
+      padding: 14px; 
+      border-radius: 14px; 
+      font-size: 16px; 
+      font-weight: 800; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 6px; 
+      box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+    }
+    
     .progress-text { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-top: 12px; }
 
-    .action-row { display: flex; justify-content: space-between; align-items: center; background: #0d131f; border-radius: 14px; padding: 12px 14px; border: 1px solid #1e293b; margin-bottom: 10px; }
+    .action-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      background: #0d131f; 
+      border-radius: 14px; 
+      padding: 12px 14px; 
+      border: 1px solid #1e293b; 
+      margin-bottom: 10px; 
+      width: 100%;
+    }
     .action-left { display: flex; align-items: center; gap: 10px; }
-    .action-icon { width: 36px; height: 36px; background: #131b2e; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .action-icon { width: 36px; height: 36px; background: #131b2e; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
     .action-title { font-size: 13px; font-weight: 700; }
     .action-desc { font-size: 11px; color: #64748b; margin-top: 2px; }
-    .btn-action { background: #1e1b4b; border: 1px solid #3730a3; color: #818cf8; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-action { background: #1e1b4b; border: 1px solid #3730a3; color: #818cf8; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 
     .section-title { font-size: 16px; font-weight: 800; margin: 15px 0 10px 0; display: flex; align-items: center; gap: 6px; }
-    .empty-state { text-align: center; padding: 30px 10px; color: #64748b; font-size: 13px; }
+    .empty-state { text-align: center; padding: 30px 10px; color: #64748b; font-size: 13px; width: 100%; }
     .empty-icon { font-size: 36px; margin-bottom: 8px; display: block; }
 
-    /* History Items UI Styles */
-    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #080d1a; border: 1px solid #1a2333; border-radius: 12px; margin-bottom: 8px; }
+    /* History Items UI */
+    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #080d1a; border: 1px solid #1a2333; border-radius: 12px; margin-bottom: 8px; width: 100%; }
     .history-left { text-align: left; }
     .history-title { font-size: 13px; font-weight: 700; color: #ffffff; }
     .history-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
@@ -210,36 +289,50 @@
     .status-paid, .status-valid { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
     .status-rejected, .status-fake { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* Support Page Styles */
-    .video-card { background: linear-gradient(180deg, #151433, #0d131f); border-radius: 18px; padding: 30px 15px; text-align: center; border: 1px solid #1a2333; margin-bottom: 15px; }
-    .play-btn { width: 55px; height: 55px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 20px; color: #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .support-box { background: #0d131f; border-radius: 16px; padding: 15px 10px; text-align: center; border: 1px solid #1e293b; }
-    .support-icon { width: 42px; height: 42px; background: #131c2e; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 20px; }
+    /* Support Page */
+    .video-card { background: linear-gradient(180deg, #151433, #0d131f); border-radius: 18px; padding: 25px 15px; text-align: center; border: 1px solid #1a2333; margin-bottom: 15px; width: 100%; }
+    .play-btn { width: 50px; height: 50px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 18px; color: #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .support-box { background: #0d131f; border-radius: 16px; padding: 15px 10px; text-align: center; border: 1px solid #1e293b; width: 100%; }
+    .support-icon { width: 40px; height: 40px; background: #131c2e; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; }
 
-    /* Referral Page Styles */
-    .ref-header-title { font-size: 28px; font-weight: 900; background: linear-gradient(180deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
-    .ref-banner { background: linear-gradient(180deg, #12162e, #0d131f); border-radius: 18px; padding: 20px 15px; text-align: center; border: 1px solid #1e293b; margin-bottom: 12px; }
-    .ref-link-box { display: flex; gap: 8px; background: #080d1a; border: 1px solid #1e293b; border-radius: 10px; padding: 4px; margin-top: 10px; }
+    /* Referral Page */
+    .ref-header-title { font-size: 26px; font-weight: 900; background: linear-gradient(180deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+    .ref-banner { background: linear-gradient(180deg, #12162e, #0d131f); border-radius: 18px; padding: 20px 15px; text-align: center; border: 1px solid #1e293b; margin-bottom: 12px; width: 100%; }
+    .ref-link-box { display: flex; gap: 8px; background: #080d1a; border: 1px solid #1e293b; border-radius: 10px; padding: 4px; margin-top: 10px; width: 100%; }
     .ref-input { background: transparent; border: none; padding: 8px; color: #818cf8; font-size: 12px; width: 100%; outline: none; }
-    .btn-copy { background: #6366f1; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+    .btn-copy { background: #6366f1; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; flex-shrink: 0; }
     .btn-telegram { width: 100%; background: #10b981; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
 
-    /* Wallet Page Styles */
-    .wallet-header-title { font-size: 28px; font-weight: 900; background: linear-gradient(180deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
-    .available-box { background: linear-gradient(180deg, #06271c, #051410); border: 1px solid #059669; border-radius: 18px; padding: 16px; text-align: center; margin-bottom: 12px; }
-    .form-group { margin-bottom: 12px; }
+    /* Wallet Page */
+    .wallet-header-title { font-size: 26px; font-weight: 900; background: linear-gradient(180deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+    .available-box { background: linear-gradient(180deg, #06271c, #051410); border: 1px solid #059669; border-radius: 18px; padding: 16px; text-align: center; margin-bottom: 12px; width: 100%; }
+    .form-group { margin-bottom: 12px; width: 100%; }
     .form-label { font-size: 10px; color: #64748b; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
     select, input[type="number"] { width: 100%; padding: 12px; background: #080d1a; border: 1px solid #1e293b; border-radius: 10px; color: #fff; outline: none; font-size: 13px; }
     .btn-withdraw { width: 100%; background: #10b981; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; margin-top: 5px; }
 
-    /* Bottom Navigation Bar */
-    .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #06090e; display: flex; justify-space-around; padding: 10px 0 12px 0; border-top: 1px solid #111827; z-index: 1000; }
-    .nav-item { text-align: center; color: #475569; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    /* Fixed Navigation Bar Layout */
+    .nav-bar { 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0;
+      width: 100%; 
+      max-width: 480px;
+      margin: 0 auto;
+      background: #06090e; 
+      display: flex; 
+      justify-content: space-around; 
+      padding: 10px 0 12px 0; 
+      border-top: 1px solid #111827; 
+      z-index: 1000; 
+    }
+    .nav-item { text-align: center; color: #475569; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: none; flex: 1; }
     .nav-item.active { color: #818cf8; }
     .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
 
-    /* Ad Popup Modal Styles */
+    /* Ad Popup Modal */
     .ad-modal {
       display: none;
       position: fixed;
@@ -260,18 +353,8 @@
       text-align: center;
       position: relative;
     }
-    .ad-step-indicator {
-      font-size: 12px;
-      color: #818cf8;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .ad-timer {
-      font-size: 14px;
-      color: #facc15;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
+    .ad-step-indicator { font-size: 12px; color: #818cf8; font-weight: bold; margin-bottom: 8px; }
+    .ad-timer { font-size: 14px; color: #facc15; margin-bottom: 15px; font-weight: bold; }
     .btn-next-ad {
       width: 100%;
       background: #10b981;
@@ -297,6 +380,7 @@
       border: none;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      width: 100%;
     }
   </style>
 </head>
@@ -305,9 +389,7 @@
   <!-- ==================== SPLASH SCREEN ANIMATION ==================== -->
   <div id="splash-screen">
     <div class="splash-center">
-      <div class="main-circle" id="splash-avatar">
-        💰
-      </div>
+      <div class="main-circle" id="splash-avatar">💰</div>
       <div class="float-icon icon-1">🪙</div>
       <div class="float-icon icon-2">🪙</div>
       <div class="float-icon icon-3">📺</div>
@@ -325,234 +407,238 @@
     </div>
   </div>
 
-  <!-- ==================== 1. HOME PAGE ==================== -->
-  <div id="home" class="page active-page">
-    
-    <div class="profile-section">
-      <div class="profile-left">
-        <div class="avatar" id="avatar-letters">U</div>
-        <div class="user-info">
-          <div class="name" id="user-fullname">Loading...</div>
-          <div class="id">ID: <span id="user-tg-id">0000000000</span></div>
-        </div>
-      </div>
-      <div class="active-badge">★ Active</div>
-    </div>
+  <div class="app-container">
 
-    <div class="balance-card">
-      <div class="balance-label">TOTAL BALANCE</div>
-      <div class="balance-amount">
-        <span id="user-balance">0.00</span> <span class="currency">টাকা</span>
+    <!-- ==================== 1. HOME PAGE ==================== -->
+    <div id="home" class="page active-page">
+      
+      <div class="profile-section">
+        <div class="profile-left">
+          <div class="avatar" id="avatar-letters">U</div>
+          <div class="user-info">
+            <div class="name" id="user-fullname">Loading...</div>
+            <div class="id">ID: <span id="user-tg-id">0000000000</span></div>
+          </div>
+        </div>
+        <div class="active-badge">★ Active</div>
       </div>
 
-      <div class="stats-container">
-        <div class="stat-box">
-          <div class="stat-value"><span id="stat-earned">0.00</span></div>
-          <div class="stat-curr">টাকা</div>
-          <div class="stat-label">Earned</div>
+      <div class="balance-card">
+        <div class="balance-label">TOTAL BALANCE</div>
+        <div class="balance-amount">
+          <span id="user-balance">0.00</span> <span class="currency">টাকা</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-value"><span id="stat-withdrawn">0.00</span></div>
-          <div class="stat-curr">টাকা</div>
-          <div class="stat-label">Withdrawn</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value"><span id="stat-referrals">0</span></div>
-          <div class="stat-label" style="margin-top:14px;">Referrals</div>
-        </div>
-      </div>
-    </div>
 
-    <div class="notice-marquee-box">
-      <div class="notice-text">
-        📢 এখানে আপনারা ১০০% পেমেন্ট পাবে। সঠিক নিয়ম অনুযায়ী কাজ করতে হবে।অন্যথায় পেমেন্ট পাবেন না।
-      </div>
-    </div>
-
-    <div class="ad-card">
-      <div class="ad-header">
-        <div class="ad-title">📺 বিজ্ঞাপন দেখে আয় করুন</div>
-        <div class="reward-badge">+৳ 5.00</div>
-      </div>
-
-      <div class="counter-grid">
-        <div class="counter-box">
-          <div class="counter-num" id="watched-today">0</div>
-          <div class="counter-sub">Watched today</div>
-        </div>
-        <div class="counter-box">
-          <div class="counter-num">40</div>
-          <div class="counter-sub">Daily limit</div>
+        <div class="stats-container">
+          <div class="stat-box">
+            <div class="stat-value"><span id="stat-earned">0.00</span></div>
+            <div class="stat-curr">টাকা</div>
+            <div class="stat-label">Earned</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value"><span id="stat-withdrawn">0.00</span></div>
+            <div class="stat-curr">টাকা</div>
+            <div class="stat-label">Withdrawn</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value"><span id="stat-referrals">0</span></div>
+            <div class="stat-label" style="margin-top:14px;">Referrals</div>
+          </div>
         </div>
       </div>
 
-      <button class="btn-yellow" onclick="startAdSequence()">► বিজ্ঞাপন দেখুন</button>
-
-      <div class="progress-text">
-        <span>Today's progress</span>
-        <span style="color:#facc15;"><span id="prog-count">0</span> / 40</span>
-      </div>
-    </div>
-
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon">📢</div>
-        <div>
-          <div class="action-title">পেমেন্ট প্রুফ গ্রুপ</div>
-          <div class="action-desc">পেমেন্টের সকল প্রমাণ দেখতে পারবেন গ্রুপে</div>
+      <div class="notice-marquee-box">
+        <div class="notice-text">
+          📢 এখানে আপনারা ১০০% পেমেন্ট পাবে। সঠিক নিয়ম অনুযায়ী কাজ করতে হবে।অন্যথায় পেমেন্ট পাবেন না।
         </div>
       </div>
-      <button class="btn-action" onclick="window.open('https://t.me/', '_blank')">জয়েন করুন</button>
-    </div>
 
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon">🎬</div>
-        <div>
-          <div class="action-title">কাজের সঠিক নিয়মের ভিডিও</div>
-          <div class="action-desc">কিভাবে কাজ করবেন দেখে নিন</div>
+      <div class="ad-card">
+        <div class="ad-header">
+          <div class="ad-title">📺 বিজ্ঞাপন দেখে আয় করুন</div>
+          <div class="reward-badge">+৳ 5.00</div>
+        </div>
+
+        <div class="counter-grid">
+          <div class="counter-box">
+            <div class="counter-num" id="watched-today">0</div>
+            <div class="counter-sub">Watched today</div>
+          </div>
+          <div class="counter-box">
+            <div class="counter-num">40</div>
+            <div class="counter-sub">Daily limit</div>
+          </div>
+        </div>
+
+        <button class="btn-yellow" onclick="startAdSequence()">► বিজ্ঞাপন দেখুন</button>
+
+        <div class="progress-text">
+          <span>Today's progress</span>
+          <span style="color:#facc15;"><span id="prog-count">0</span> / 40</span>
         </div>
       </div>
-      <button class="btn-action" onclick="showPage('support', document.querySelectorAll('.nav-item')[1])">দেখুন</button>
-    </div>
 
-    <div class="section-title">⚡ Tasks</div>
-    <div class="card empty-state">
-      <span class="empty-icon">📋</span>
-      No tasks yet
-    </div>
-
-  </div>
-
-  <!-- ==================== 2. SUPPORT PAGE ==================== -->
-  <div id="support" class="page">
-    <div class="video-card">
-      <div class="play-btn">▶</div>
-      <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">টিউটোরিয়াল ভিডিও</div>
-      <div style="font-size:14px; font-weight:bold;">কিভাবে কাজ করবেন তার ভিডিও</div>
-    </div>
-
-    <div class="section-title">🛟 সাহায্য নিন</div>
-
-    <div class="grid-2">
-      <div class="support-box" onclick="window.open('https://t.me/', '_blank')" style="cursor:pointer;">
-        <div class="support-icon">💬</div>
-        <div style="font-size:13px; font-weight:bold;">টেলিগ্রাম</div>
-        <div style="font-size:10px; color:#64748b; margin-top:4px;">সরাসরি টেলিগ্রামে এডমিনকে মেসেজ দিন</div>
-      </div>
-
-      <div class="support-box">
-        <div class="support-icon">🎧</div>
-        <div style="font-size:13px; font-weight:bold;">লাইভ চ্যাট</div>
-        <div style="font-size:10px; color:#64748b; margin-top:4px;">লাইভ চ্যাটে সরাসরি কথা বলুন</div>
-      </div>
-
-      <div class="support-box" style="margin-top:10px;">
-        <div class="support-icon" style="color:#ef4444; font-weight:bold;">!?</div>
-        <div style="font-size:13px; font-weight:bold;">জিজ্ঞাসা</div>
-        <div style="font-size:10px; color:#64748b; margin-top:4px;">প্রশ্নের উত্তর</div>
-      </div>
-
-      <div class="support-box" style="margin-top:10px;">
-        <div class="support-icon">✉️</div>
-        <div style="font-size:13px; font-weight:bold;">ই-মেইল</div>
-        <div style="font-size:10px; color:#64748b; margin-top:4px;">ই-মেইলে মেসেজ দিন</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== 3. REFERRAL PAGE ==================== -->
-  <div id="referral" class="page">
-    <div class="ref-header-title">Referral</div>
-
-    <div class="ref-banner">
-      <div style="font-size:30px; margin-bottom:5px;">🤝</div>
-      <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Invite & Earn</div>
-      <div style="font-size:11px; color:#94a3b8;">Earn <span style="color:#facc15; font-weight:bold;">৳ 50.00</span> bonus per real referral</div>
-
-      <div class="stats-container" style="margin-top:15px;">
-        <div class="stat-box">
-          <div class="stat-value" id="ref-total-count">0</div>
-          <div class="stat-label">Total Refs</div>
+      <div class="action-row">
+        <div class="action-left">
+          <div class="action-icon">📢</div>
+          <div>
+            <div class="action-title">পেমেন্ট প্রুফ গ্রুপ</div>
+            <div class="action-desc">পেমেন্টের সকল প্রমাণ দেখতে পারবেন গ্রুপে</div>
+          </div>
         </div>
-        <div class="stat-box">
-          <div class="stat-value" style="color:#818cf8;">৳ <span id="ref-earned-amount">0.00</span></div>
-          <div class="stat-label">Earned</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="ref-active-count">0</div>
-          <div class="stat-label">Active</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="form-label">YOUR REFERRAL LINK</div>
-      <div class="ref-link-box">
-        <input type="text" class="ref-input" id="ref-link" value="Generating..." readonly>
-        <button class="btn-copy" onclick="copyRef()">Copy</button>
+        <button class="btn-action" onclick="window.open('https://t.me/', '_blank')">জয়েন করুন</button>
       </div>
 
-      <button class="btn-telegram" onclick="shareTelegram()">
-        <span>🎁</span> Share on Telegram
-      </button>
-    </div>
+      <div class="action-row">
+        <div class="action-left">
+          <div class="action-icon">🎬</div>
+          <div>
+            <div class="action-title">কাজের সঠিক নিয়মের ভিডিও</div>
+            <div class="action-desc">কিভাবে কাজ করবেন দেখে নিন</div>
+          </div>
+        </div>
+        <button class="btn-action" onclick="showPage('support', document.querySelectorAll('.nav-item')[1])">দেখুন</button>
+      </div>
 
-    <div class="section-title">👥 Your Referrals</div>
-    <div id="ref-list-container">
+      <div class="section-title">⚡ Tasks</div>
       <div class="card empty-state">
-        <span class="empty-icon" style="color:#3b82f6;">👤</span>
-        No referrals yet
+        <span class="empty-icon">📋</span>
+        No tasks yet
       </div>
-    </div>
-  </div>
 
-  <!-- ==================== 4. WALLET PAGE ==================== -->
-  <div id="wallet" class="page">
-    <div class="wallet-header-title">Wallet</div>
-
-    <div class="available-box">
-      <div style="font-size:10px; color:#64748b; font-weight:700;">AVAILABLE BALANCE</div>
-      <div style="font-size:32px; font-weight:800; color:#10b981; margin:4px 0;">
-        <span id="wallet-balance">0.00</span> <span style="font-size:16px; color:#facc15;">টাকা</span>
-      </div>
-      <div style="font-size:10px; color:#475569;">Withdrawable</div>
     </div>
 
-    <div class="card">
-      <div class="ad-title" style="margin-bottom:12px;">💸 Withdraw Request</div>
-
-      <div class="form-group">
-        <label class="form-label">PAYMENT METHOD</label>
-        <select id="withdraw-method">
-          <option value="">— Select method —</option>
-          <option value="bkash">bKash</option>
-          <option value="nagad">Nagad</option>
-          <option value="rocket">Rocket</option>
-        </select>
+    <!-- ==================== 2. SUPPORT PAGE ==================== -->
+    <div id="support" class="page">
+      <div class="video-card">
+        <div class="play-btn">▶</div>
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">টিউটোরিয়াল ভিডিও</div>
+        <div style="font-size:14px; font-weight:bold;">কিভাবে কাজ করবেন তার ভিডিও</div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">ACCOUNT NUMBER</label>
-        <input type="number" id="withdraw-account" placeholder="Enter your number...">
-      </div>
+      <div class="section-title">🛟 সাহায্য নিন</div>
 
-      <div class="form-group">
-        <label class="form-label">AMOUNT</label>
-        <input type="number" id="withdraw-amount" placeholder="0.00">
-        <div style="font-size:10px; color:#facc15; margin-top:4px;">Minimum: ৳ 500.00</div>
-      </div>
+      <div class="grid-2">
+        <div class="support-box" onclick="window.open('https://t.me/', '_blank')" style="cursor:pointer;">
+          <div class="support-icon">💬</div>
+          <div style="font-size:13px; font-weight:bold;">টেলিগ্রাম</div>
+          <div style="font-size:10px; color:#64748b; margin-top:4px;">সরাসরি টেলিগ্রামে এডমিনকে মেসেজ দিন</div>
+        </div>
 
-      <button class="btn-withdraw" onclick="processWithdraw()">Withdraw Now →</button>
+        <div class="support-box">
+          <div class="support-icon">🎧</div>
+          <div style="font-size:13px; font-weight:bold;">লাইভ চ্যাট</div>
+          <div style="font-size:10px; color:#64748b; margin-top:4px;">লাইভ চ্যাটে সরাসরি কথা বলুন</div>
+        </div>
+
+        <div class="support-box" style="margin-top:10px;">
+          <div class="support-icon" style="color:#ef4444; font-weight:bold;">!?</div>
+          <div style="font-size:13px; font-weight:bold;">জিজ্ঞাসা</div>
+          <div style="font-size:10px; color:#64748b; margin-top:4px;">প্রশ্নের উত্তর</div>
+        </div>
+
+        <div class="support-box" style="margin-top:10px;">
+          <div class="support-icon">✉️</div>
+          <div style="font-size:13px; font-weight:bold;">ই-মেইল</div>
+          <div style="font-size:10px; color:#64748b; margin-top:4px;">ই-মেইলে মেসেজ দিন</div>
+        </div>
+      </div>
     </div>
 
-    <div class="section-title">📋 Withdrawal History</div>
-    <div id="withdraw-list-container">
-      <div class="card empty-state">
-        <span class="empty-icon">📫</span>
-        No withdrawals yet
+    <!-- ==================== 3. REFERRAL PAGE ==================== -->
+    <div id="referral" class="page">
+      <div class="ref-header-title">Referral</div>
+
+      <div class="ref-banner">
+        <div style="font-size:30px; margin-bottom:5px;">🤝</div>
+        <div style="font-size:18px; font-weight:800; margin-bottom:4px;">Invite & Earn</div>
+        <div style="font-size:11px; color:#94a3b8;">Earn <span style="color:#facc15; font-weight:bold;">৳ 50.00</span> bonus per real referral</div>
+
+        <div class="stats-container" style="margin-top:15px;">
+          <div class="stat-box">
+            <div class="stat-value" id="ref-total-count">0</div>
+            <div class="stat-label">Total Refs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" style="color:#818cf8;">৳ <span id="ref-earned-amount">0.00</span></div>
+            <div class="stat-label">Earned</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="ref-active-count">0</div>
+            <div class="stat-label">Active</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-label">YOUR REFERRAL LINK</div>
+        <div class="ref-link-box">
+          <input type="text" class="ref-input" id="ref-link" value="Generating..." readonly>
+          <button class="btn-copy" onclick="copyRef()">Copy</button>
+        </div>
+
+        <button class="btn-telegram" onclick="shareTelegram()">
+          <span>🎁</span> Share on Telegram
+        </button>
+      </div>
+
+      <div class="section-title">👥 Your Referrals</div>
+      <div id="ref-list-container">
+        <div class="card empty-state">
+          <span class="empty-icon" style="color:#3b82f6;">👤</span>
+          No referrals yet
+        </div>
       </div>
     </div>
+
+    <!-- ==================== 4. WALLET PAGE ==================== -->
+    <div id="wallet" class="page">
+      <div class="wallet-header-title">Wallet</div>
+
+      <div class="available-box">
+        <div style="font-size:10px; color:#64748b; font-weight:700;">AVAILABLE BALANCE</div>
+        <div style="font-size:32px; font-weight:800; color:#10b981; margin:4px 0;">
+          <span id="wallet-balance">0.00</span> <span style="font-size:16px; color:#facc15;">টাকা</span>
+        </div>
+        <div style="font-size:10px; color:#475569;">Withdrawable</div>
+      </div>
+
+      <div class="card">
+        <div class="ad-title" style="margin-bottom:12px;">💸 Withdraw Request</div>
+
+        <div class="form-group">
+          <label class="form-label">PAYMENT METHOD</label>
+          <select id="withdraw-method">
+            <option value="">— Select method —</option>
+            <option value="bkash">bKash</option>
+            <option value="nagad">Nagad</option>
+            <option value="rocket">Rocket</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ACCOUNT NUMBER</label>
+          <input type="number" id="withdraw-account" placeholder="Enter your number...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">AMOUNT</label>
+          <input type="number" id="withdraw-amount" placeholder="0.00">
+          <div style="font-size:10px; color:#facc15; margin-top:4px;">Minimum: ৳ 500.00</div>
+        </div>
+
+        <button class="btn-withdraw" onclick="processWithdraw()">Withdraw Now →</button>
+      </div>
+
+      <div class="section-title">📋 Withdrawal History</div>
+      <div id="withdraw-list-container">
+        <div class="card empty-state">
+          <span class="empty-icon">📫</span>
+          No withdrawals yet
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ==================== AD DISPLAY MODAL ==================== -->
@@ -585,18 +671,19 @@
 
   <!-- ==================== SCRIPT & FIREBASE INTEGRATION ==================== -->
   <script>
+    // Monetag In-App Script Settings (Interval set to 120 seconds / 2 Minutes)
     show_11506670({
       type: 'inApp',
       inAppSettings: {
         frequency: 2,
         capping: 0.1,
-        interval: 90,
-        timeout: 15,
+        interval: 120, // ১২০ সেকেন্ড (২ মিনিট) পর পর অ্যাড দেখাবে
+        timeout: 5,
         everyPage: false
       }
     });
 
-    // ১. ফায়ারবেস কনফিগারেশন
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCoLposoTqJ51RoYWXhIXfnKb5_v27nF4I",
       authDomain: "sm24-money.firebaseapp.com",
@@ -610,7 +697,7 @@
     const db = firebase.firestore();
 
     // Telegram WebApp Setup
-    const tg = window.Telegram.WebApp;
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) {
       tg.ready();
       try { tg.expand(); } catch (e) {}
@@ -672,9 +759,7 @@
 
     const userRef = db.collection("users").doc(currentUserId);
 
-    // ==================== FIX 1: LOAD USER & SAVE REFERRER ====================
     function loadUserData() {
-      // টেলিগ্রাম স্টার্ট প্যারামিটার (রেফারাল আইডি) নেওয়ার লজিক
       let startParam = "";
       if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
         startParam = tg.initDataUnsafe.start_param.toString();
@@ -694,7 +779,7 @@
             withdrawn: 0.00,
             watchedToday: 0,
             referrals: 0,
-            referredBy: (startParam && startParam !== currentUserId) ? startParam : null, // রেফারকারীর ID সেভ
+            referredBy: (startParam && startParam !== currentUserId) ? startParam : null,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           };
           userRef.set(userData);
@@ -736,7 +821,6 @@
       document.getElementById('ref-earned-amount').innerText = (refs * refBonus).toFixed(2);
     }
 
-    // ==================== REALTIME WITHDRAWAL HISTORY ====================
     function loadWithdrawalHistory() {
       db.collection("withdrawals")
         .onSnapshot((snapshot) => {
@@ -793,7 +877,6 @@
         });
     }
 
-    // ==================== FIX 2: REALTIME REFERRAL HISTORY ====================
     function loadReferralHistory() {
       db.collection("users")
         .onSnapshot((snapshot) => {
@@ -803,7 +886,6 @@
           const userReferrals = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            // ID টাইপ অমিল এড়াতে স্ট্রিং এ কনভার্ট করে ফিল্টার করা হচ্ছে
             if (data.referredBy && data.referredBy.toString() === currentUserId.toString()) {
               userReferrals.push(data);
             }
@@ -868,7 +950,6 @@
       window.scrollTo(0, 0);
     }
 
-    // ==================== MONETAG IN-APP 5-ADS SEQUENCE LOGIC ====================
     let currentAdStep = 0;
     const totalAdsPerTask = 5;
     let timerInterval = null;
@@ -959,7 +1040,6 @@
       alert('অভিনন্দন! আপনি সফলভাবে ৫টি বিজ্ঞাপন দেখে ৳ ৫.০০ অর্জন করেছেন।');
     }
 
-    // ==================== OTHER UTILITIES ====================
     function processWithdraw() {
       const method = document.getElementById('withdraw-method').value;
       const account = document.getElementById('withdraw-account').value;
