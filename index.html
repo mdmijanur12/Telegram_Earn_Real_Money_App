@@ -672,16 +672,17 @@
   <!-- ==================== SCRIPT & FIREBASE INTEGRATION ==================== -->
   <script>
     // Monetag In-App Script Settings (Interval set to 120 seconds / 2 Minutes)
-    show_11506670({
+        show_11506670({
       type: 'inApp',
       inAppSettings: {
-        frequency: 2,
-        capping: 0.1,
-        interval: 120, // ১২০ সেকেন্ড (২ মিনিট) পর পর অ্যাড দেখাবে
-        timeout: 5,
+        frequency: 2,       // ২ মিনিটে সর্বোচ্চ ২ টি অ্যাড
+        capping: 2,         // ক্যাপিং বাড়িয়ে ২ মিনিট (১২০ সেকেন্ড) নিশ্চিত করা হলো
+        interval: 120,      // ১২০ সেকেন্ড (২ মিনিট) পরপর অ্যাড চেক করবে
+        timeout: 10,        // পেজ ওপেন হওয়ার ১০ সেকেন্ড পর প্রথম অ্যাড আসবে (তাড়াহুড়ো করবে না)
         everyPage: false
       }
     });
+
 
     // Firebase Configuration
     const firebaseConfig = {
