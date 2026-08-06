@@ -760,27 +760,27 @@
 
     const userRef = db.collection("users").doc(currentUserId);
 
-    function loadUserData() {
+        function loadUserData() {
       let startParam = "";
       if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
-        startParam = tg.initDataUnsafe.start_param.toString();
+        startParam = tg.initDataUnsafe.start_param.toString().trim();
       }
 
       userRef.get().then((doc) => {
         if (doc.exists) {
           userData = doc.data();
           userData.name = currentUserName;
-          userData.userId = currentUserId;
+          userData.userId = currentUserId.toString();
         } else {
           userData = {
             name: currentUserName,
-            userId: currentUserId,
+            userId: currentUserId.toString(),
             balance: 0.00,
             earned: 0.00,
             withdrawn: 0.00,
             watchedToday: 0,
             referrals: 0,
-            referredBy: (startParam && startParam !== currentUserId) ? startParam : null,
+            referredBy: (startParam && startParam !== currentUserId.toString()) ? startParam : null,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           };
           userRef.set(userData);
@@ -792,6 +792,60 @@
         console.error("Firebase Connection Error: ", error);
       });
     }
+
+    function loadReferralHistory() {
+      db.collection("users")
+        .where("referredBy", "==", currentUserId.toString())
+        .onSnapshot((snapshot) => {
+          const container = document.getElementById("ref-list-container");
+          if (!container) return;
+
+          if (snapshot.empty) {
+            container.innerHTML = `
+              <div class="card empty-state">
+                <span class="empty-icon" style="color:#3b82f6;">👤</span>
+                No referrals yet
+              </div>`;
+            userData.referrals = 0;
+            updateUI();
+            return;
+          }
+
+          let html = "";
+          let validRefCount = 0;
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const isFake = data.status === "fake" || data.isFake === true;
+            
+            let badgeClass = isFake ? "status-fake" : "status-valid";
+            let badgeText = isFake ? "Rejected / Fake" : "Valid";
+            let bonusAmount = isFake ? "৳ 0.00" : "+৳ 50.00";
+
+            if (!isFake) validRefCount++;
+
+            html += `
+              <div class="history-item">
+                <div class="history-left">
+                  <div class="history-title">${data.name || 'User'}</div>
+                  <div class="history-sub">ID: ${data.userId || 'N/A'}</div>
+                </div>
+                <div class="history-right">
+                  <div class="history-amount" style="color:${isFake ? '#ef4444' : '#10b981'};">${bonusAmount}</div>
+                  <span class="status-badge ${badgeClass}">${badgeText}</span>
+                </div>
+              </div>
+            `;
+          });
+
+          userData.referrals = validRefCount;
+          updateUI();
+          container.innerHTML = html;
+        }, (error) => {
+          console.error("Referral History Error:", error);
+        });
+    }
+
 
     function updateUIAndDatabase() {
       updateUI();
